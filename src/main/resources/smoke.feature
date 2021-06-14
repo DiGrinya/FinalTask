@@ -104,3 +104,35 @@ Feature: Smoke
     Examples:
       | homePage             | keyword      |
       | https://www.ebay.com | 184793892456 |
+
+  Scenario Outline: Check checkout option
+
+    Given User opens '<homePage>' page
+    And User checks search field visibility
+    And User makes search by keyword '<keyword>'
+    And User clicks search button
+    And User clicks on product in question
+    When User clicks on buy it now
+    Then User clicks that he was redirected to '<checkout>' page
+
+    Examples:
+      | homePage             | keyword      | checkout     |
+      | https://www.ebay.com | 184793892456 | pay.ebay.com |
+
+
+  Scenario Outline: Check checkout option with empty fields
+
+    Given User opens '<homePage>' page
+    And User checks search field visibility
+    And User makes search by keyword '<keyword>'
+    And User clicks search button
+    And User clicks on product in question
+    And User clicks on buy it now
+    And User clicks that he was redirected to '<checkout>' page
+    When User clicks on Done button without filling required fields
+    Then User checks that empty field '<error>' appear
+
+
+    Examples:
+      | homePage             | keyword      | checkout     | error                     |
+      | https://www.ebay.com | 184793892456 | pay.ebay.com | Error: Enter a first name. |

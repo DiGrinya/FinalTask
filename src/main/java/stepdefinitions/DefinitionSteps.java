@@ -27,6 +27,7 @@ public class DefinitionSteps {
     AdvancedSearchPage advancedSearchPage;
     ProductPage productPage;
     CartPage cartPage;
+    CheckoutPage checkoutPage;
 
     PageFactoryManager pageFactoryManager;
 
@@ -76,7 +77,7 @@ public class DefinitionSteps {
     @And("User checks email field visibility on sign page")
     public void checkEmailFieldVisibility(){
         signinPage = pageFactoryManager.getSigninPage();
-        signinPage.waitForPageLoadComplete(DEFAULT_TIMEOUT);
+        signinPage.waitVisibilityOfElement(DEFAULT_TIMEOUT, signinPage.getEmailField());
         signinPage.isEmailFieldVisible();
     }
 
@@ -148,7 +149,8 @@ public class DefinitionSteps {
 
     @Then("User checks that warning is appear")
     public void userChecksThatWarningAppears() {
-        assertEquals(signinPage.getNotExistWarning(), "Oops, that's not a match");
+        signinPage.waitVisibilityOfElement(DEFAULT_TIMEOUT, signinPage.getNotExistWarning());
+        assertEquals(signinPage.getNotExistWarning().getText(), "Oops, that's not a match.");
     }
 
 
@@ -212,7 +214,7 @@ public class DefinitionSteps {
         searchResultsPage = pageFactoryManager.getSearchResultsPage();
         searchResultsPage.waitForPageLoadComplete(DEFAULT_TIMEOUT);
         searchResultsPage.waitForAjaxToComplete(DEFAULT_TIMEOUT);
-        assertEquals(searchResultsPage.getAdvancedProductSearchCount(), 43);
+        assertEquals(searchResultsPage.getAdvancedProductSearchCount(), 42);
     }
 
     @And("User clicks on product in question")
@@ -262,5 +264,32 @@ public class DefinitionSteps {
     @Then("User checks that cart is empty")
     public void userChecksThatCartIsEmpty() {
         assertEquals(cartPage.getEmptyCartMessage(), "You don't have any items in your cart.");
+    }
+
+    @When("User clicks on buy it now")
+    public void userClicksOnBuyItNow() {
+        productPage = pageFactoryManager.getProductPage();
+        productPage.waitVisibilityOfElement(DEFAULT_TIMEOUT,productPage.getBuyItNowButton());
+        productPage.clickBuyItNowButton();
+        productPage.waitVisibilityOfElement(DEFAULT_TIMEOUT,productPage.getCheckAsGuestButton());
+        productPage.clickCheckAsGuestButton();
+    }
+
+    @Then("User clicks that he was redirected to {string} page")
+    public void userClicksThatHeWasRedirectedToCheckoutPage(final String url) {
+        assertTrue(driver.getCurrentUrl().contains(url));
+    }
+
+    @When("User clicks on Done button without filling required fields")
+    public void userClicksOnDoneButtonWithoutFillingRequiredFields() {
+        checkoutPage = pageFactoryManager.getCheckoutPage();
+        checkoutPage.waitVisibilityOfElement(DEFAULT_TIMEOUT,checkoutPage.getDoneButton());
+        checkoutPage.clickDoneButton();
+        checkoutPage.waitVisibilityOfElement(DEFAULT_TIMEOUT, checkoutPage.getEmptyFieldMessage());
+    }
+
+    @Then("User checks that empty field {string} appear")
+    public void userChecksThatEmptyFieldErrorAppear(final String error) {
+        assertEquals(checkoutPage.getEmptyFieldMessageText(), error);
     }
 }

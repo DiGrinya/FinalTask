@@ -46,8 +46,13 @@ public class SigninPage extends BasePage{
         emailField.sendKeys(login);
     }
 
-    public String getNotExistWarning(){
-        return notExistWarning.getText();
+    public WebElement getNotExistWarning(){
+        return notExistWarning;
     }
+
+    public WebElement getEmailField() {
+        return emailField;
+    }
+
 
 }

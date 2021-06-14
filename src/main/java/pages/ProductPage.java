@@ -19,6 +19,12 @@ public class ProductPage extends BasePage{
     private WebElement addToCartButton;
 
 
+    @FindBy(xpath = "//a[@id='binBtn_btn']")
+    private WebElement buyItNowButton;
+
+    @FindBy(xpath = "//button[@id='sbin-gxo-btn']")
+    private WebElement checkAsGuestButton;
+
     public ProductPage(WebDriver driver) {
         super(driver);
     }
@@ -45,5 +51,21 @@ public class ProductPage extends BasePage{
 
     public WebElement isAddToCartButtonVisible(){
         return addToCartButton;
+    }
+
+    public void clickBuyItNowButton(){
+        buyItNowButton.click();
+    }
+
+    public WebElement getBuyItNowButton() {
+        return buyItNowButton;
+    }
+
+    public WebElement getCheckAsGuestButton() {
+        return checkAsGuestButton;
+    }
+
+    public void clickCheckAsGuestButton(){
+        checkAsGuestButton.click();
     }
 }

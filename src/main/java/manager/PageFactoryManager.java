@@ -43,4 +43,8 @@ public class PageFactoryManager {
         return new CartPage(driver);
     }
 
+    public CheckoutPage getCheckoutPage(){
+        return new CheckoutPage(driver);
+    }
+
 }
